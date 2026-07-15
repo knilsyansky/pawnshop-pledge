@@ -90,7 +90,31 @@ Repositories must contain no calculations.
 
 ---
 
-# Domain
+# Business Domain
+
+This project models a pawnshop.
+
+Customers leave one or more items as collateral.
+
+The pawnshop creates a pledge.
+
+The pledge references:
+
+- one client
+- one tariff
+- one or more pledged items
+
+Each pledged item has:
+
+- category
+- dynamic characteristics
+- estimated value
+
+The total pledge amount is the sum of all pledged items.
+
+Later the customer redeems exactly one pledge.
+
+Redeeming changes pledge status and stores redemption information.
 
 Use Entities for domain models.
 
@@ -103,6 +127,99 @@ Expected examples:
 - PledgeStatus
 
 Business calculations must be implemented as domain services.
+
+---
+
+Business Rules
+
+Creating a pledge
+
+1.
+
+User selects tariff.
+
+The system calculates
+
+dueDate = createdAt + basePeriodDays.
+
+2.
+
+User selects or creates a client.
+
+3.
+
+User adds one or more pledge items.
+
+4.
+
+Each item contributes estimatedValue.
+
+5.
+
+Total pledge amount is the sum of all items.
+
+6.
+
+Status becomes ACTIVE.
+
+---
+
+Redeeming
+
+User selects client.
+
+System loads ACTIVE pledges only.
+
+User chooses one pledge.
+
+System calculates redemption amount.
+
+Status changes to REDEEMED.
+
+Store
+
+- redeemedAt
+- redeemedAmount
+
+Redeemed pledges never appear again.
+
+# Interest Calculation
+
+Base interest
+
+If today <= dueDate
+
+interest =
+
+amount * basePeriodRate / 100
+
+total = amount + interest
+
+---
+
+Overdue
+
+If today > dueDate
+
+overdueDays =
+
+today - dueDate
+
+interest =
+
+amount * basePeriodRate / 100
+
++
+
+amount * overdueRate / 100 * overdueDays
+
+total =
+
+amount + interest
+
+Assume overdueRate is a DAILY percentage.
+
+Document this decision in README.
 
 ---
 
@@ -154,6 +271,109 @@ Everything must be reproducible using:
 
 - migrations
 - seed scripts
+
+# Database Model
+
+Client
+
+Fields
+
+- id
+- fullName
+- phone
+
+Relationships
+
+1 Client
+
+↓
+
+Many Pledges
+
+---
+
+Tariff
+
+Fields
+
+- id
+- name
+- basePeriodDays
+- basePeriodRate
+- overdueRate
+
+Relationships
+
+1 Tariff
+
+↓
+
+Many Pledges
+
+---
+
+ItemCategory
+
+Fields
+
+- id
+- name
+- specification schema
+
+The specification schema defines dynamic form fields.
+
+Store as JSON.
+
+Example
+
+Smartphone
+
+- model
+- memory
+- screenCondition
+
+Monitor
+
+- diagonal
+- resolution
+- scratches
+
+---
+
+Pledge
+
+Fields
+
+- id
+- tariffId
+- clientId
+- createdAt
+- dueDate
+- amount
+- redeemedAmount
+- redeemedAt
+- status
+
+Relationships
+
+One pledge
+
+↓
+
+Many pledge items
+
+---
+
+PledgeItem
+
+Fields
+
+- id
+- pledgeId
+- categoryId
+- name
+- estimatedValue
+- specifications
 
 ---
 
