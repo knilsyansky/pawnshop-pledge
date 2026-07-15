@@ -1,0 +1,10 @@
+{
+  "name": "pawnshop-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "echo \"Frontend build not configured yet.\"",
+    "start": "echo \"Frontend start not configured yet.\""
+  },
+  "devDependencies": {}
+}

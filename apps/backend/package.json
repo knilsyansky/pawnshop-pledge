@@ -1,0 +1,21 @@
+{
+  "name": "pawnshop-backend",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "echo \"Backend build not configured yet.\"",
+    "start": "echo \"Backend start not configured yet.\"",
+    "prisma:generate": "prisma generate --schema prisma/schema.prisma",
+    "prisma:seed": "ts-node --transpile-only prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "prisma": "^5.14.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.5.4"
+  }
+}
