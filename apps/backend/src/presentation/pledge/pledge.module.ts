@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { PledgeController } from './pledge.controller';
-import { PledgeService } from './pledge.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { PledgeService } from '../../application/pledge/pledge.service';
+import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 
 @Module({
   controllers: [PledgeController],

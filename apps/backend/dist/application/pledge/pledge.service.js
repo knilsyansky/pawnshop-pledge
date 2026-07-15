@@ -5,20 +5,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
-const common_1 = require("@nestjs/common");
-const client_module_1 = require("./presentation/client/client.module");
-const tariff_module_1 = require("./presentation/tariff/tariff.module");
-const category_module_1 = require("./presentation/category/category.module");
-const pledge_module_1 = require("./presentation/pledge/pledge.module");
-let AppModule = class AppModule {
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-exports.AppModule = AppModule;
-exports.AppModule = AppModule = __decorate([
-    (0, common_1.Module)({
-        imports: [client_module_1.ClientModule, tariff_module_1.TariffModule, category_module_1.CategoryModule, pledge_module_1.PledgeModule],
-        controllers: [],
-        providers: []
-    })
-], AppModule);
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PledgeService = void 0;
+const common_1 = require("@nestjs/common");
+const prisma_service_1 = require("../../infrastructure/prisma/prisma.service");
+let PledgeService = class PledgeService {
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+};
+exports.PledgeService = PledgeService;
+exports.PledgeService = PledgeService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+], PledgeService);

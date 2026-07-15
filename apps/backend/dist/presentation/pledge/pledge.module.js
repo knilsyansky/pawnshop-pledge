@@ -6,19 +6,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
+exports.PledgeModule = void 0;
 const common_1 = require("@nestjs/common");
-const client_module_1 = require("./presentation/client/client.module");
-const tariff_module_1 = require("./presentation/tariff/tariff.module");
-const category_module_1 = require("./presentation/category/category.module");
-const pledge_module_1 = require("./presentation/pledge/pledge.module");
-let AppModule = class AppModule {
+const pledge_controller_1 = require("./pledge.controller");
+const pledge_service_1 = require("../../application/pledge/pledge.service");
+const prisma_service_1 = require("../../infrastructure/prisma/prisma.service");
+let PledgeModule = class PledgeModule {
 };
-exports.AppModule = AppModule;
-exports.AppModule = AppModule = __decorate([
+exports.PledgeModule = PledgeModule;
+exports.PledgeModule = PledgeModule = __decorate([
     (0, common_1.Module)({
-        imports: [client_module_1.ClientModule, tariff_module_1.TariffModule, category_module_1.CategoryModule, pledge_module_1.PledgeModule],
-        controllers: [],
-        providers: []
+        controllers: [pledge_controller_1.PledgeController],
+        providers: [pledge_service_1.PledgeService, prisma_service_1.PrismaService]
     })
-], AppModule);
+], PledgeModule);
