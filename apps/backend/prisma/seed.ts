@@ -51,8 +51,8 @@ async function main() {
     }
   ];
 
-  await prisma.tariff.createMany({ data: tariffs });
-  await prisma.itemCategory.createMany({ data: categories });
+  await prisma.tariff.createMany({ data: tariffs, skipDuplicates: true });
+  await prisma.itemCategory.createMany({ data: categories, skipDuplicates: true });
 
   console.log('Seeded tariffs and item categories.');
 }
