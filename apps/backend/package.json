@@ -7,6 +7,7 @@
     "build": "echo \"Backend build not configured yet.\"",
     "start": "echo \"Backend start not configured yet.\"",
     "prisma:generate": "prisma generate --schema prisma/schema.prisma",
+    "prisma:migrate": "prisma migrate deploy --schema prisma/schema.prisma",
     "prisma:seed": "ts-node --transpile-only prisma/seed.ts"
   },
   "dependencies": {

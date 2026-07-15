@@ -44,7 +44,19 @@ This repository is a monorepo scaffold for a pawnshop pledge/redeem application.
    npm run db:verify
    ```
 
-6. Tail PostgreSQL logs
+6. Apply database migrations
+
+   ```bash
+   npm run db:migrate
+   ```
+
+7. Seed the database with initial tariffs and categories
+
+   ```bash
+   npm run db:seed
+   ```
+
+8. Tail PostgreSQL logs
 
    ```bash
    npm run db:logs

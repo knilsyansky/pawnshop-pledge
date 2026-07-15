@@ -297,10 +297,15 @@ Tariff
 Fields
 
 - id
-- name
 - basePeriodDays
 - basePeriodRate
 - overdueRate
+- overduePeriodDays
+
+Notes
+
+- `id` is a string label and also the tariff name, for example: "Техника 5 дней 2,158%"
+- `overduePeriodDays` is nullable; when null, overdue is unlimited.
 
 Relationships
 
@@ -317,10 +322,12 @@ ItemCategory
 Fields
 
 - id
-- name
 - specification schema
 
-The specification schema defines dynamic form fields.
+Notes
+
+- `id` is a unique string label and also the category name.
+- The specification schema defines dynamic form fields.
 
 Store as JSON.
 
@@ -353,6 +360,11 @@ Fields
 - redeemedAmount
 - redeemedAt
 - status
+
+Notes
+
+- `amount` is the total value of all pledged items at creation.
+- `redeemedAmount` is the amount actually paid when the pledge is redeemed; it can include interest and fees.
 
 Relationships
 

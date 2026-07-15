@@ -21,17 +21,16 @@ model Client {
 }
 
 model Tariff {
-  id              Int      @id @default(autoincrement())
-  name            String
-  basePeriodDays  Int
-  basePeriodRate  Decimal  @db.Decimal(10, 2)
-  overdueRate     Decimal  @db.Decimal(10, 2)
-  pledges         Pledge[]
+  id               String   @id
+  basePeriodDays   Int
+  basePeriodRate   Decimal  @db.Decimal(10, 2)
+  overdueRate      Decimal  @db.Decimal(10, 2)
+  overduePeriodDays Int?
+  pledges          Pledge[]
 }
 
 model ItemCategory {
-  id            Int          @id @default(autoincrement())
-  name          String
+  id            String       @id
   specification Json
   pledgeItems   PledgeItem[]
 }
@@ -39,7 +38,7 @@ model ItemCategory {
 model Pledge {
   id             Int            @id @default(autoincrement())
   tariff         Tariff         @relation(fields: [tariffId], references: [id])
-  tariffId       Int
+  tariffId       String
   client         Client         @relation(fields: [clientId], references: [id])
   clientId       Int
   createdAt      DateTime       @default(now())
@@ -52,12 +51,12 @@ model Pledge {
 }
 
 model PledgeItem {
-  id             Int      @id @default(autoincrement())
-  pledge         Pledge   @relation(fields: [pledgeId], references: [id])
+  id             Int          @id @default(autoincrement())
+  pledge         Pledge       @relation(fields: [pledgeId], references: [id])
   pledgeId       Int
-  category       ItemCategory @relation(fields: [categoryId], references: [id])
-  categoryId     Int
+  category       ItemCategory  @relation(fields: [categoryId], references: [id])
+  categoryId     String
   name           String
-  estimatedValue Decimal  @db.Decimal(12, 2)
+  estimatedValue Decimal      @db.Decimal(12, 2)
   specifications Json
 }
