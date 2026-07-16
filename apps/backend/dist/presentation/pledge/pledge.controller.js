@@ -21,7 +21,7 @@ let PledgeController = class PledgeController {
         this.pledgeService = pledgeService;
     }
     findAll() {
-        return [];
+        return this.pledgeService.findAll();
     }
     create(createPledgeDto) {
         return this.pledgeService.create(createPledgeDto);

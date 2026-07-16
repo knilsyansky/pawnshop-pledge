@@ -15,6 +15,16 @@ export class PledgeService {
     return decimalAmount.toFixed(2);
   }
 
+  async findAll() {
+    return this.prisma.pledge.findMany({
+      include: {
+        client: true,
+        tariff: true,
+        items: true
+      }
+    });
+  }
+
   async create(createPledgeDto: CreatePledgeDto) {
     const tariff = await this.prisma.tariff.findUnique({
       where: { id: createPledgeDto.tariffId }

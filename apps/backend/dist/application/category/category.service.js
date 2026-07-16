@@ -16,6 +16,9 @@ let CategoryService = class CategoryService {
     constructor(prisma) {
         this.prisma = prisma;
     }
+    async findAll() {
+        return this.prisma.itemCategory.findMany();
+    }
 };
 exports.CategoryService = CategoryService;
 exports.CategoryService = CategoryService = __decorate([

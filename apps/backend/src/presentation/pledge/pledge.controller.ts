@@ -8,7 +8,7 @@ export class PledgeController {
 
   @Get()
   findAll() {
-    return [];
+    return this.pledgeService.findAll();
   }
 
   @Post()

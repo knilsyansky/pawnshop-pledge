@@ -2,7 +2,9 @@ const path = require('path');
 const dotenv = require('dotenv');
 const { Client } = require('pg');
 
-dotenv.config({ path: path.join(__dirname, '..', '.env') });
+const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+
+dotenv.config({ path: path.join(__dirname, '..', envFile) });
 
 const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/pawnshop';
 

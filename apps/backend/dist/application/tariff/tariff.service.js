@@ -16,6 +16,9 @@ let TariffService = class TariffService {
     constructor(prisma) {
         this.prisma = prisma;
     }
+    async findAll() {
+        return this.prisma.tariff.findMany();
+    }
 };
 exports.TariffService = TariffService;
 exports.TariffService = TariffService = __decorate([

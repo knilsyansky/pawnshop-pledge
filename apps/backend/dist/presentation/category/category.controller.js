@@ -11,9 +11,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoryController = void 0;
 const common_1 = require("@nestjs/common");
+const category_service_1 = require("../../application/category/category.service");
 let CategoryController = class CategoryController {
+    constructor(categoryService) {
+        this.categoryService = categoryService;
+    }
     findAll() {
-        return [];
+        return this.categoryService.findAll();
     }
 };
 exports.CategoryController = CategoryController;
@@ -24,5 +28,6 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], CategoryController.prototype, "findAll", null);
 exports.CategoryController = CategoryController = __decorate([
-    (0, common_1.Controller)('categories')
+    (0, common_1.Controller)('categories'),
+    __metadata("design:paramtypes", [category_service_1.CategoryService])
 ], CategoryController);

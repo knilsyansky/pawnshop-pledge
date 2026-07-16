@@ -5,6 +5,35 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { AppModule } from '../../app.module';
 
+const testTariffs = [
+  {
+    id: 'Техника 5 дней 2.158%',
+    basePeriodDays: 5,
+    basePeriodRate: '2.158',
+    overdueRate: '0.50',
+    overduePeriodDays: 7
+  }
+];
+
+const testCategories = [
+  {
+    id: 'Smartphone',
+    specification: {
+      model: 'string',
+      memory: 'string',
+      screenCondition: 'string'
+    }
+  },
+  {
+    id: 'Monitor',
+    specification: {
+      diagonal: 'string',
+      resolution: 'string',
+      scratches: 'string'
+    }
+  }
+];
+
 describe('Pledge e2e', () => {
   let app: INestApplication;
   let prisma: PrismaClient;
@@ -20,6 +49,15 @@ describe('Pledge e2e', () => {
     const connectionString = process.env.DATABASE_URL;
     const adapter = new PrismaPg({ connectionString });
     prisma = new PrismaClient({ adapter });
+
+    await prisma.pledgeItem.deleteMany();
+    await prisma.pledge.deleteMany();
+    await prisma.client.deleteMany();
+    await prisma.itemCategory.deleteMany();
+    await prisma.tariff.deleteMany();
+
+    await prisma.tariff.createMany({ data: testTariffs });
+    await prisma.itemCategory.createMany({ data: testCategories });
   });
 
   afterAll(async () => {

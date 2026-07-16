@@ -24,6 +24,15 @@ let PledgeService = class PledgeService {
         const decimalAmount = amount instanceof index_browser_1.Prisma.Decimal ? amount : new index_browser_1.Prisma.Decimal(String(amount));
         return decimalAmount.toFixed(2);
     }
+    async findAll() {
+        return this.prisma.pledge.findMany({
+            include: {
+                client: true,
+                tariff: true,
+                items: true
+            }
+        });
+    }
     async create(createPledgeDto) {
         const tariff = await this.prisma.tariff.findUnique({
             where: { id: createPledgeDto.tariffId }

@@ -1,10 +1,17 @@
 import path from 'path';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
+const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+dotenv.config({ path: path.resolve(__dirname, '../../../', envFile) });
 
-const prisma = new PrismaClient();
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error('DATABASE_URL must be defined in apps/backend/.env or the current environment');
+}
+
+const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
 
 async function main() {
   const tariffs = [
@@ -26,27 +33,27 @@ async function main() {
 
   const categories = [
     {
-      id: 'Smartphone',
+      id: 'Смартфоны',
       specification: {
-        model: 'string',
-        memory: 'string',
-        screenCondition: 'string'
+        "Модель": 'string',
+        "Память": 'integer',
+        "Состояние экрана": 'enum'
       }
     },
     {
-      id: 'Monitor',
+      id: 'Мониторы',
       specification: {
-        diagonal: 'string',
-        resolution: 'string',
-        scratches: 'string'
+        "Диагональ": 'integer',
+        "Разрешение": 'string',
+        "Царапины": 'boolean'
       }
     },
     {
-      id: 'Jewelry',
+      id: 'Украшения',
       specification: {
-        material: 'string',
-        weight: 'string',
-        condition: 'string'
+        "Материал": 'string',
+        "Вес": 'decimal',
+        "Состояние": 'enum'
       }
     }
   ];

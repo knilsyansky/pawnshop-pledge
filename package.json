@@ -14,6 +14,7 @@
     "db:verify": "npm --prefix apps/backend run verify:db",
     "db:migrate": "npm run --prefix apps/backend prisma:migrate",
     "db:seed": "npm run --prefix apps/backend prisma:seed",
+    "db:reset": "docker compose -f docker/docker-compose.yml down -v && docker compose -f docker/docker-compose.yml up -d && npm run --prefix apps/backend prisma:migrate && npm run --prefix apps/backend prisma:seed",
     "env:copy": "node -e \"require('fs').copyFileSync('.env.example', '.env')\"",
     "start": "echo \"No application start configured yet. Run npm run db:up to start PostgreSQL.\""
   }

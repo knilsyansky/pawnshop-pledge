@@ -12,9 +12,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClientService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../../infrastructure/prisma/prisma.service");
+const client_1 = require("@prisma/client");
 let ClientService = class ClientService {
     constructor(prisma) {
         this.prisma = prisma;
+    }
+    async findAll() {
+        return this.prisma.client.findMany();
+    }
+    async create(createClientDto) {
+        try {
+            return await this.prisma.client.create({
+                data: createClientDto
+            });
+        }
+        catch (error) {
+            if (error instanceof client_1.Prisma.PrismaClientKnownRequestError &&
+                error.code === 'P2002') {
+                throw new Error('Клиент с таким номером телефона уже существует.');
+            }
+            throw error;
+        }
     }
 };
 exports.ClientService = ClientService;

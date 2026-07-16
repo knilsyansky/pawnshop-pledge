@@ -18,7 +18,8 @@ const path_1 = __importDefault(require("path"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const client_1 = require("@prisma/client");
 const adapter_pg_1 = require("@prisma/adapter-pg");
-dotenv_1.default.config({ path: path_1.default.resolve(__dirname, '../../../.env') });
+const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+dotenv_1.default.config({ path: path_1.default.resolve(__dirname, '../../../', envFile) });
 let PrismaService = class PrismaService extends client_1.PrismaClient {
     constructor() {
         const connectionString = process.env.DATABASE_URL;
