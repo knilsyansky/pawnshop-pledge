@@ -74,6 +74,12 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/pawnshop
 npm run dev:setup
 ```
 
+# Старт сервера (фронт запускается раньше бека, нужно подождать\перезагрузить вкладку):
+
+```bash
+npm run dev
+```
+
 Команда выполняет:
 
 1 Запуск PostgreSQL в Docker
