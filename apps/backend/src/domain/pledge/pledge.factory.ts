@@ -1,5 +1,7 @@
 import { Prisma } from '@prisma/client/index-browser';
 import { Pledge, PledgeItem } from './pledge.entity';
+import { Money } from '../value-objects/money';
+import Decimal from 'decimal.js';
 
 export class PledgeFactory {
   static createFromData(
@@ -10,7 +12,7 @@ export class PledgeFactory {
     items: PledgeItem[]
   ): Pledge {
     const amount = items.reduce((sum, item) => sum + Number(item.estimatedValue), 0);
-    return new Pledge(clientId, tariffId, createdAt, dueDate, new Prisma.Decimal(amount), 'ACTIVE', items);
+    return new Pledge(clientId, tariffId, createdAt, dueDate, Money.from(amount), 'ACTIVE', items);
   }
 
   static toPrismaCreate(pledge: Pledge) {
@@ -19,7 +21,7 @@ export class PledgeFactory {
       tariffId: pledge.tariffId,
       createdAt: pledge.createdAt,
       dueDate: pledge.dueDate,
-      amount: pledge.amount,
+      amount: new Decimal(pledge.amount.toDecimal().toString()),
       status: pledge.status,
       items: {
         create: pledge.items.map(item => ({
@@ -27,7 +29,7 @@ export class PledgeFactory {
             connect: { id: item.categoryId }
           },
           name: item.name,
-          estimatedValue: item.estimatedValue,
+          estimatedValue: new Decimal(item.estimatedValue.toDecimal().toString()),
           specifications: item.specifications as Prisma.InputJsonValue
         }))
       }

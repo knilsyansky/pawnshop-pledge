@@ -47,6 +47,10 @@ describe('Pledge e2e', () => {
     await app.init();
 
     const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) {
+      throw new Error('DATABASE_URL is not set');
+    }
+    
     const adapter = new PrismaPg({ connectionString });
     prisma = new PrismaClient({ adapter });
 
@@ -79,7 +83,7 @@ describe('Pledge e2e', () => {
           {
             categoryId: 'Smartphone',
             name: 'Pixel 8',
-            estimatedValue: 200,
+            estimatedValue: 200.10,
             specifications: { model: 'Pixel 8', memory: '128GB', screenCondition: 'Good' }
           },
           {
@@ -95,7 +99,7 @@ describe('Pledge e2e', () => {
     expect(response.body).toHaveProperty('id');
     expect(response.body).toHaveProperty('clientId', client.id);
     expect(response.body).toHaveProperty('tariffId', 'Техника 5 дней 2.158%');
-    expect(response.body).toHaveProperty('amount', '350.00');
+    expect(response.body).toHaveProperty('amount', '350.10');
     expect(response.body).toHaveProperty('dueDate');
 
     const dueDate = new Date(response.body.dueDate);
@@ -134,7 +138,7 @@ describe('Pledge e2e', () => {
     });
 
     const response = await request(app.getHttpServer())
-      .patch(`/pledges/${pledge.id}/redeem`)
+      .patch(`/pledges/redeem/${pledge.id}`)
       .expect(200);
 
     expect(response.body).toHaveProperty('id', pledge.id);

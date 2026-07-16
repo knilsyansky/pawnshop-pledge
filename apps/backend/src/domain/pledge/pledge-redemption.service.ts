@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client/index-browser';
 
 export class PledgeRedemptionService {
-  static calculateRedeemedAmount(
+  static calculateRedemptionAmount(
     amount: Prisma.Decimal,
     dueDate: Date,
     basePeriodRate: Prisma.Decimal,

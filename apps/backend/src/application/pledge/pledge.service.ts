@@ -1,18 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../infrastructure/prisma/prisma.service';
 import { CreatePledgeDto } from '../../presentation/pledge/dto/create-pledge.dto';
 import { PledgeFactory } from '../../domain/pledge/pledge.factory';
 import { PledgeItem } from '../../domain/pledge/pledge.entity';
 import { Prisma } from '@prisma/client/index-browser';
 import { PledgeRedemptionService } from '../../domain/pledge/pledge-redemption.service';
+import { Money } from '../../domain/value-objects/money';
 
 @Injectable()
 export class PledgeService {
   constructor(private readonly prisma: PrismaService) {}
 
   private formatAmount(amount: Prisma.Decimal | string | number): string {
-    const decimalAmount = amount instanceof Prisma.Decimal ? amount : new Prisma.Decimal(String(amount));
-    return decimalAmount.toFixed(2);
+    const decimalAmount = amount instanceof Prisma.Decimal ? amount.toFixed(2) : amount;
+    return Money.from(decimalAmount.toString()).toString();
   }
 
   async findAll() {
@@ -31,7 +32,7 @@ export class PledgeService {
     });
 
     if (!tariff) {
-      throw new Error('Tariff not found');
+      throw new NotFoundException('Tariff not found');
     }
 
     const createdAt = new Date();
@@ -43,7 +44,7 @@ export class PledgeService {
         new PledgeItem(
           item.categoryId,
           item.name,
-          new Prisma.Decimal(String(item.estimatedValue)),
+          Money.from(item.estimatedValue.toFixed(2)),
           item.specifications
         )
     );
@@ -69,19 +70,20 @@ export class PledgeService {
 
   async redeem(pledgeId: number) {
     const pledge = await this.prisma.pledge.findUnique({
-      where: { id: pledgeId },
+      where: { id: pledgeId, 
+        status: 'ACTIVE' },
       include: { tariff: true }
     });
 
     if (!pledge) {
-      throw new Error('Pledge not found');
+      throw new NotFoundException('Залог не найден');
     }
 
     if (pledge.status !== 'ACTIVE') {
-      throw new Error('Only active pledges can be redeemed');
+      throw new ConflictException('Лишь активные залоги могут быть выкуплены.');
     }
 
-    const redeemedAmount = PledgeRedemptionService.calculateRedeemedAmount(
+    const redeemedAmount = PledgeRedemptionService.calculateRedemptionAmount(
       pledge.amount,
       pledge.dueDate,
       pledge.tariff.basePeriodRate,
@@ -100,7 +102,7 @@ export class PledgeService {
     return {
       ...updatedPledge,
       amount: this.formatAmount(updatedPledge.amount),
-      redeemedAmount: this.formatAmount(updatedPledge.redeemedAmount!) 
+      redeemedAmount: updatedPledge.redeemedAmount ? this.formatAmount(updatedPledge.redeemedAmount!) : null,
     };
   }
 }
