@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { Client } from 'pg';
 
 const envFile = '.env.test';
-dotenv.config({ path: path.resolve(__dirname, envFile) });
+dotenv.config({ path: path.resolve(__dirname, '../', envFile) });
 
 const connectionString = process.env.DATABASE_URL;
 
