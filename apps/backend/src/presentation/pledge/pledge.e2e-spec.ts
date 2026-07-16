@@ -34,9 +34,10 @@ const testCategories = [
   }
 ];
 
+
 describe('Pledge e2e', () => {
   let app: INestApplication;
-  let prisma: PrismaClient;
+  let prisma: PrismaClient
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -53,16 +54,30 @@ describe('Pledge e2e', () => {
     
     const adapter = new PrismaPg({ connectionString });
     prisma = new PrismaClient({ adapter });
-
+  
+  });
+  
+  async function cleanDatabase() {
     await prisma.pledgeItem.deleteMany();
     await prisma.pledge.deleteMany();
     await prisma.client.deleteMany();
     await prisma.itemCategory.deleteMany();
     await prisma.tariff.deleteMany();
+    }
 
-    await prisma.tariff.createMany({ data: testTariffs });
-    await prisma.itemCategory.createMany({ data: testCategories });
-  });
+    beforeEach(async () => {
+        await cleanDatabase();
+
+        await prisma.tariff.createMany({
+            data: testTariffs,
+            skipDuplicates: true,
+        });
+
+        await prisma.itemCategory.createMany({
+            data: testCategories,
+            skipDuplicates: true,
+        });
+    });
 
   afterAll(async () => {
     await prisma.$disconnect();

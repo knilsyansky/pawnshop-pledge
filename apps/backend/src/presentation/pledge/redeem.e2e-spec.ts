@@ -64,27 +64,28 @@ describe('Pledge redeem e2e', () => {
     });
 
     prisma = new PrismaClient({ adapter });
+  });
 
+  async function cleanDatabase() {
     await prisma.pledgeItem.deleteMany();
     await prisma.pledge.deleteMany();
     await prisma.client.deleteMany();
     await prisma.itemCategory.deleteMany();
     await prisma.tariff.deleteMany();
+    }
+
+  beforeEach(async () => {
+    await cleanDatabase();
 
     await prisma.tariff.createMany({
       data: testTariffs,
+        skipDuplicates: true,
     });
 
     await prisma.itemCategory.createMany({
       data: testCategories,
+        skipDuplicates: true,
     });
-  });
-
-
-  beforeEach(async () => {
-    await prisma.pledgeItem.deleteMany();
-    await prisma.pledge.deleteMany();
-    await prisma.client.deleteMany();
   });
 
 
