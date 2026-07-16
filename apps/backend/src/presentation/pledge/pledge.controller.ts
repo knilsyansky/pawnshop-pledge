@@ -6,17 +6,12 @@ import { CreatePledgeDto } from './dto/create-pledge.dto';
 export class PledgeController {
   constructor(private readonly pledgeService: PledgeService) {}
 
-  @Get()
-  findAll() {
-    return this.pledgeService.findAll();
-  }
-
   @Post()
   create(@Body() createPledgeDto: CreatePledgeDto) {
     return this.pledgeService.create(createPledgeDto);
   }
 
-  @Patch(':id/redeem')
+  @Patch('redeem/:id')
   redeem(@Param('id') id: string) {
     return this.pledgeService.redeem(Number(id));
   }

@@ -17,8 +17,10 @@ let ClientService = class ClientService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async findAll() {
-        return this.prisma.client.findMany();
+    async findAll(withPledges) {
+        return this.prisma.client.findMany({
+            include: withPledges ? { pledges: { include: { tariff: true, items: true } } } : undefined
+        });
     }
     async create(createClientDto) {
         try {

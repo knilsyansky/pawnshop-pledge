@@ -43,6 +43,7 @@ async function main() {
     {
       id: 'Мониторы',
       specification: {
+        "Модель": 'string',
         "Диагональ": 'integer',
         "Разрешение": 'string',
         "Царапины": 'boolean'
@@ -53,7 +54,6 @@ async function main() {
       specification: {
         "Материал": 'string',
         "Вес": 'decimal',
-        "Состояние": 'enum'
       }
     }
   ];

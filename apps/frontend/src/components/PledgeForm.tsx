@@ -22,7 +22,6 @@ import {
   createClient,
   createPledge,
   ClientRecord,
-  CreateClientPayload,
   TariffRecord,
   CategoryRecord,
   CreatePledgePayload,
@@ -35,6 +34,18 @@ const blankItem = (categoryId = '', categorySpecification: Record<string, string
   estimatedValue: 0,
   specifications: { ...categorySpecification }
 });
+
+function parseRate(value: string) {
+  return Number(value.replace(',', '.')) || 0;
+}
+
+function calculateReturnInTime(estimatedValue: number, tariff: TariffRecord) {
+  return estimatedValue + (estimatedValue * parseRate(tariff.basePeriodRate)) / 100;
+}
+
+function calculateOverduePerDay(estimatedValue: number, tariff: TariffRecord) {
+  return (estimatedValue * parseRate(tariff.overdueRate)) / 100;
+}
 
 export function PledgeForm() {
   const [clients, setClients] = useState<ClientRecord[]>([]);
@@ -81,7 +92,27 @@ export function PledgeForm() {
     load();
   }, []);
 
-  const totalAmount = items.reduce((sum, item) => sum + Number(item.estimatedValue || 0), 0);
+  const totals = items.reduce(
+    (acc, item) => {
+      const estimatedValue = Number(item.estimatedValue || 0);
+      const tariff = tariffs.find((t) => t.id === selectedTariff);
+      const returnInTime = tariff ? calculateReturnInTime(estimatedValue, tariff) : 0;
+      const overduePerDay = tariff ? calculateOverduePerDay(estimatedValue, tariff) : 0;
+
+      return {
+        estimated: acc.estimated + estimatedValue,
+        returnInTime: acc.returnInTime + returnInTime,
+        overduePerDay: acc.overduePerDay + overduePerDay,
+        returnWithOneDayOverdue: acc.returnWithOneDayOverdue + (returnInTime + overduePerDay)
+      };
+    },
+    {
+      estimated: 0,
+      returnInTime: 0,
+      overduePerDay: 0,
+      returnWithOneDayOverdue: 0
+    }
+  );
 
   function updateItem(index: number, changes: Partial<PledgeItemPayload>) {
     setItems((current) =>
@@ -343,13 +374,13 @@ export function PledgeForm() {
                       slotProps={{ htmlInput: { min: 0, step: 0.01 } }}
                     />
 
-                    <IconButton color="error" onClick={() => removeItem(index)}>
+                    <IconButton color="error" disabled={items.length <= 1} onClick={() => removeItem(index)}>
                       Убрать
                     </IconButton>
                   </Box>
 
                   {category && (
-                    <Box sx={{ display: 'grid', gap: 2 }}>
+                    <Box sx={{ display: 'grid', gap: 2, mb: 2 }}>
                       <Typography variant="subtitle2">Характеристики</Typography>
                       {Object.entries(category.specification).map(([key]) => (
                         <TextField
@@ -366,10 +397,15 @@ export function PledgeForm() {
             })}
           </Paper>
 
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-            <Typography variant="subtitle1">Итоговая сумма</Typography>
-            <Typography variant="h6">{totalAmount.toFixed(2)}</Typography>
-          </Box>
+          <Paper variant="outlined" sx={{ p: 2, mb: 2 }}>
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+              Итоги
+            </Typography>
+            <Typography>Клиент получает: {totals.estimated.toFixed(2)}</Typography>
+            <Typography>Клиент должен вернуть вовремя: {totals.returnInTime.toFixed(2)}</Typography>
+            <Typography>Клиент должен вернуть при 1 дне просрочки: {totals.returnWithOneDayOverdue.toFixed(2)}</Typography>
+            <Typography>Прирост за каждый день просрочки: {totals.overduePerDay.toFixed(2)}</Typography>
+          </Paper>
 
           <Divider sx={{ my: 2 }} />
 

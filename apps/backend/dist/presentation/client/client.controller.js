@@ -20,8 +20,9 @@ let ClientController = class ClientController {
     constructor(clientService) {
         this.clientService = clientService;
     }
-    findAll() {
-        return this.clientService.findAll();
+    findAll(withPledges) {
+        console.log('withPledges', withPledges);
+        return this.clientService.findAll(withPledges === 'true');
     }
     create(createClientDto) {
         return this.clientService.create(createClientDto);
@@ -30,8 +31,9 @@ let ClientController = class ClientController {
 exports.ClientController = ClientController;
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('withPledges')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], ClientController.prototype, "findAll", null);
 __decorate([

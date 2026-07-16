@@ -7,8 +7,10 @@ import { Prisma } from '@prisma/client';
 export class ClientService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.client.findMany();
+  async findAll(withPledges: boolean) {
+    return this.prisma.client.findMany({
+        include: withPledges ? { pledges: { include: { tariff: true, items: true } } } : undefined
+    });
   }
 
   async create(createClientDto: CreateClientDto) {

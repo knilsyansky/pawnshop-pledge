@@ -4,6 +4,7 @@ export interface ClientRecord {
   id: number;
   fullName: string;
   phone: string;
+  pledges?: PledgeRecord[];
 }
 
 export interface CreateClientPayload {
@@ -37,6 +38,27 @@ export interface CreatePledgePayload {
   items: PledgeItemPayload[];
 }
 
+export interface PledgeRecord {
+    status: 'ACTIVE' | 'REDEEMED';
+    id: number;
+    clientId: number;
+    tariffId: string;
+    tariff: TariffRecord;
+    items: PledgeItemRecord[];
+    createdAt: string;
+    dueDate: string;
+    amount: string;
+}
+
+export interface PledgeItemRecord {
+    id: number;
+    pledgeId: number;
+    categoryId: string;
+    name: string;
+    estimatedValue: string;
+    specifications: Record<string, string>;
+}
+
 async function handleResponse(response: Response) {
   if (!response.ok) {
     const text = await response.text();
@@ -45,8 +67,8 @@ async function handleResponse(response: Response) {
   return response.json();
 }
 
-export async function fetchClients(): Promise<ClientRecord[]> {
-  const response = await fetch(`${API_BASE_URL}/clients`);
+export async function fetchClients(withPledges: boolean = false): Promise<ClientRecord[]> {
+  const response = await fetch(`${API_BASE_URL}/clients` + (withPledges ? '?withPledges=true' : ''));
   return handleResponse(response);
 }
 
@@ -75,6 +97,14 @@ export async function createPledge(payload: CreatePledgePayload) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
+  });
+
+  return handleResponse(response);
+}
+
+export async function redeemPledge(pledgeId: number) {
+  const response = await fetch(`${API_BASE_URL}/redeem/${pledgeId}`, {
+    method: 'PATCH'
   });
 
   return handleResponse(response);

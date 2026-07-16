@@ -20,9 +20,6 @@ let PledgeController = class PledgeController {
     constructor(pledgeService) {
         this.pledgeService = pledgeService;
     }
-    findAll() {
-        return this.pledgeService.findAll();
-    }
     create(createPledgeDto) {
         return this.pledgeService.create(createPledgeDto);
     }
@@ -32,12 +29,6 @@ let PledgeController = class PledgeController {
 };
 exports.PledgeController = PledgeController;
 __decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], PledgeController.prototype, "findAll", null);
-__decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -45,7 +36,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], PledgeController.prototype, "create", null);
 __decorate([
-    (0, common_1.Patch)(':id/redeem'),
+    (0, common_1.Patch)('redeem/:id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
