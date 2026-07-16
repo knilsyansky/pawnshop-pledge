@@ -17,7 +17,7 @@
     "db:migrate:test": "npm --prefix apps/backend run prisma:migrate:test",
     "db:seed": "npm --prefix apps/backend run prisma:seed",
 
-    "db:init": "npm run db:migrate && npm run db:seed",
+    "db:init": "npm --prefix apps/backend run prisma:generate && npm run db:migrate && npm run db:seed",
     "db:init:test": "npm run db:create:test && npm run db:migrate:test",
 
     "db:verify": "npm --prefix apps/backend run verify:db",
