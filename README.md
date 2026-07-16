@@ -53,17 +53,6 @@ root dependencies
 backend dependencies
 frontend dependencies
 
-Настройка переменных окружения:
-
-```bash
-npm run env:copy
-```
-Backend использует:
-
-```bash
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/pawnshop
-```
-
 --- 
 
 # Запуск проекта
