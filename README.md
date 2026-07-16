@@ -64,7 +64,7 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/pawnshop
 
 --- 
 
-№ Запуск проекта
+# Запуск проекта
 
 Полная автоматическая настройка:
 
