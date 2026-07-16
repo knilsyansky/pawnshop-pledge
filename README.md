@@ -116,16 +116,17 @@ PostgreSQL
 упрощенный DDD подход
 
 Основные слои:
+```text
+.
+├── domain
+│   ├── value-objects
+│   └── domain-services
+│   application
+│    └── use-cases
+│   presentation
+│   └── controllers
+```
 
-domain
- ├── value-objects
- └── domain-services
-
-application
- └── use-cases
-
-presentation
- └── controllers
 
 ## Frontend:
 
