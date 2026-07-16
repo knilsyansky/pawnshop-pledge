@@ -3,13 +3,15 @@
 Монорепозиторий приложения для управления залогами.
 
 Структура:
+```text
 .
 ├── apps
-│ ├── backend
-│ └── frontend
-├── docker
-│ └── docker-compose.yml
-└── README.md
+│   ├── backend
+│   ├── frontend
+│   ├── docker
+│   ├── docker-compose.yml
+│   └── README.md
+```
 
 ---
 
