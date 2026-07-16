@@ -30,7 +30,7 @@
 
     "dev:setup": "npm run env:copy && npm run db:up && npm run db:verify && npm run db:init && npm run build && npm run dev",
 
-    "env:copy": "node -e \"const fs=require('fs'); const path='apps/backend/.env'; if(!fs.existsSync(path)){fs.copyFileSync('.env.example', path); console.log('Created apps/backend/.env')} else {console.log('apps/backend/.env already exists')}\""
+    "env:copy": "node -e \"require('fs').copyFileSync('.env.example', '.env')\""
   },
   "devDependencies": {
     "concurrently": "^10.0.3"
