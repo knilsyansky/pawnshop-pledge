@@ -4,9 +4,13 @@ const { Client } = require('pg');
 
 const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
 
-dotenv.config({ path: path.join(__dirname, '..', envFile) });
+dotenv.config({ path: path.path.resolve(__dirname, envFile) });
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/pawnshop';
+const connectionString = process.env.DATABASE_URL;
+
+if(!connectionString) {
+    throw new Error('DATABASE_URL not defined');
+}
 
 const client = new Client({ connectionString });
 

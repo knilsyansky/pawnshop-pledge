@@ -3,4 +3,4 @@ import dotenv from 'dotenv';
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'test';
 
-dotenv.config({ path: path.resolve(__dirname, '../../..', '.env.test') });
+dotenv.config({ path: path.resolve(__dirname, '.env.test') });

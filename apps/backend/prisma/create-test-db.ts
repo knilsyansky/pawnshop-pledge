@@ -2,12 +2,13 @@ import path from 'path';
 import dotenv from 'dotenv';
 import { Client } from 'pg';
 
-dotenv.config({ path: path.resolve(__dirname, '../.env.test') });
+const envFile = '.env.test';
+dotenv.config({ path: path.resolve(__dirname, envFile) });
 
 const connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  throw new Error('DATABASE_URL must be defined in apps/backend/.env.test');
+  throw new Error('DATABASE_URL not defined');
 }
 
 const url = new URL(connectionString);

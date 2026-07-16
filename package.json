@@ -28,9 +28,7 @@
 
     "dev": "concurrently \"npm --prefix apps/backend run start:dev\" \"npm --prefix apps/frontend run dev\"",
 
-    "dev:setup": "npm run env:copy && npm run db:up && npm run db:verify && npm run db:init && npm run build && npm run dev",
-
-    "env:copy": "node -e \"require('fs').copyFileSync('.env.example', '.env')\""
+    "dev:setup": "npm --prefix apps/backend run env:copy && npm run db:up && npm run db:verify && npm run db:init && npm run build && npm run dev"
   },
   "devDependencies": {
     "concurrently": "^10.0.3"
