@@ -282,7 +282,7 @@ describe('Pledge redeem e2e', () => {
 
     await request(app.getHttpServer())
       .patch(`/pledges/redeem/${pledge.id}`)
-      .expect(404);
+      .expect(409);
   });
 
 

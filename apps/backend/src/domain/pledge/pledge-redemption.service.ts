@@ -1,32 +1,54 @@
-import { Prisma } from '@prisma/client/index-browser';
+import { Prisma } from '@prisma/client';
 
-export class PledgeRedemptionService {
-  static calculateRedemptionAmount(
+const HUNDRED = new Prisma.Decimal(100);
+
+export class RedemptionCalculator {
+  static calculate(
     amount: Prisma.Decimal,
     dueDate: Date,
     basePeriodRate: Prisma.Decimal,
     overdueRate: Prisma.Decimal,
-    today = new Date()
+    today = new Date(),
   ): Prisma.Decimal {
-    const normalizedToday = new Date(today);
-    normalizedToday.setHours(0, 0, 0, 0);
+    const currentDate = this.startOfDay(today);
+    const due = this.startOfDay(dueDate);
 
-    const normalizedDueDate = new Date(dueDate);
-    normalizedDueDate.setHours(0, 0, 0, 0);
-
-    const msPerDay = 1000 * 60 * 60 * 24;
     const overdueDays = Math.max(
       0,
-      Math.floor((normalizedToday.getTime() - normalizedDueDate.getTime()) / msPerDay)
+      Math.floor(
+        (currentDate.getTime() - due.getTime()) /
+          (1000 * 60 * 60 * 24),
+      ),
     );
 
-    const baseInterest = amount.mul(basePeriodRate).div(new Prisma.Decimal(100));
+
+
+    const baseInterest = amount
+      .mul(basePeriodRate)
+      .div(HUNDRED);
+
+
+
     const overdueInterest = amount
       .mul(overdueRate)
-      .div(new Prisma.Decimal(100))
-      .mul(new Prisma.Decimal(overdueDays));
+      .div(HUNDRED)
+      .mul(overdueDays);
 
-    const total = amount.add(baseInterest).add(overdueInterest);
-    return new Prisma.Decimal(total.toFixed(2));
+
+
+    return new Prisma.Decimal(
+      amount
+        .add(baseInterest)
+        .add(overdueInterest)
+        .toFixed(2),
+    );
+  }
+
+  private static startOfDay(date: Date): Date {
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+    );
   }
 }

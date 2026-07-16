@@ -10,20 +10,29 @@
 
     "db:up": "docker compose -f docker/docker-compose.yml up -d",
     "db:down": "docker compose -f docker/docker-compose.yml down",
-
-    "db:init": "npm run db:create:test && npm run db:migrate && npm run db:seed",
-
     "db:logs": "docker compose -f docker/docker-compose.yml logs --follow",
-    "db:verify": "npm --prefix apps/backend run verify:db",
 
     "db:create:test": "npm --prefix apps/backend run prisma:test:create",
     "db:migrate": "npm --prefix apps/backend run prisma:migrate",
+    "db:migrate:test": "npm --prefix apps/backend run prisma:migrate:test",
     "db:seed": "npm --prefix apps/backend run prisma:seed",
 
-    "test:e2e": "npm run db:init:test && npm --prefix apps/backend run test:e2e",
-    "db:init:test": "npm --prefix apps/backend run prisma:test:create && npm --prefix apps/backend run prisma:migrate:test && npm --prefix apps/backend run prisma:seed",
+    "db:init": "npm run db:migrate && npm run db:seed",
+    "db:init:test": "npm run db:create:test && npm run db:migrate:test",
 
-    "env:copy": "node -e \"require('fs').copyFileSync('.env.example', '.env')\"",
-    "start": "echo \"No application start configured yet. Run npm run db:up to start PostgreSQL.\""
+    "db:verify": "npm --prefix apps/backend run verify:db",
+
+    "test:e2e": "npm run db:init:test && npm --prefix apps/backend run test:e2e",
+
+    "build": "npm --prefix apps/backend run build && npm --prefix apps/frontend run build",
+
+    "dev": "concurrently \"npm --prefix apps/backend run start:dev\" \"npm --prefix apps/frontend run dev\"",
+
+    "dev:setup": "npm run db:up && npm run db:verify && npm run db:init && npm run build && npm run dev",
+
+    "env:copy": "node -e \"require('fs').copyFileSync('.env.example', '.env')\""
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
   }
 }

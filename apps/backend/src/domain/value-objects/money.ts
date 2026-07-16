@@ -6,6 +6,9 @@ export class Money {
   static from(value: string | number): Money {
     return new Money(new Decimal(value));
   }
+  static zero() {
+    return new Money(new Decimal(0));
+  }
 
   add(other: Money): Money {
     return new Money(this.value.add(other.value));

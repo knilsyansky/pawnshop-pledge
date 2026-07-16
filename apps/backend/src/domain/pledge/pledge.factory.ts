@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client/index-browser';
+import { PledgeStatus, Prisma } from '@prisma/client';
 import { Pledge, PledgeItem } from './pledge.entity';
 import { Money } from '../value-objects/money';
 import Decimal from 'decimal.js';
@@ -11,8 +11,8 @@ export class PledgeFactory {
     dueDate: Date,
     items: PledgeItem[]
   ): Pledge {
-    const amount = items.reduce((sum, item) => sum + Number(item.estimatedValue), 0);
-    return new Pledge(clientId, tariffId, createdAt, dueDate, Money.from(amount), 'ACTIVE', items);
+    const amount = items.reduce((sum, item) => sum.add(item.estimatedValue), Money.zero());
+    return new Pledge(clientId, tariffId, createdAt, dueDate, amount, PledgeStatus.ACTIVE, items);
   }
 
   static toPrismaCreate(pledge: Pledge) {

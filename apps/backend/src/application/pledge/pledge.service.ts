@@ -4,7 +4,7 @@ import { CreatePledgeDto } from '../../presentation/pledge/dto/create-pledge.dto
 import { PledgeFactory } from '../../domain/pledge/pledge.factory';
 import { PledgeItem } from '../../domain/pledge/pledge.entity';
 import { Prisma } from '@prisma/client/index-browser';
-import { PledgeRedemptionService } from '../../domain/pledge/pledge-redemption.service';
+import { RedemptionCalculator } from '../../domain/pledge/pledge-redemption.service';
 import { Money } from '../../domain/value-objects/money';
 
 @Injectable()
@@ -69,40 +69,52 @@ export class PledgeService {
   }
 
   async redeem(pledgeId: number) {
-    const pledge = await this.prisma.pledge.findUnique({
-      where: { id: pledgeId, 
-        status: 'ACTIVE' },
-      include: { tariff: true }
-    });
+    const result = await this.prisma.$transaction(async (tx) => {
+        const pledge = await tx.pledge.findUnique({
+            where: {
+                id: pledgeId,
+            },
+            include: {
+                tariff: true,
+            },
+        });
 
-    if (!pledge) {
-      throw new NotFoundException('Залог не найден');
-    }
+        if (!pledge) {
+        throw new NotFoundException('Залог не найден');
+        }
 
-    if (pledge.status !== 'ACTIVE') {
-      throw new ConflictException('Лишь активные залоги могут быть выкуплены.');
-    }
+        if (pledge.status !== 'ACTIVE') {
+        throw new ConflictException('Лишь активные залоги могут быть выкуплены.');
+        }
 
-    const redeemedAmount = PledgeRedemptionService.calculateRedemptionAmount(
-      pledge.amount,
-      pledge.dueDate,
-      pledge.tariff.basePeriodRate,
-      pledge.tariff.overdueRate
-    );
+        const redeemedAmount =
+        RedemptionCalculator.calculate(
+            pledge.amount,
+            pledge.dueDate,
+            pledge.tariff.basePeriodRate,
+            pledge.tariff.overdueRate,
+        );
 
-    const updatedPledge = await this.prisma.pledge.update({
-      where: { id: pledgeId },
-      data: {
-        status: 'REDEEMED',
-        redeemedAt: new Date(),
-        redeemedAmount
-      }
+        const updatedPledge = await tx.pledge.update({
+        where: {
+            id: pledgeId,
+        },
+        data: {
+            status: 'REDEEMED',
+            redeemedAt: new Date(),
+            redeemedAmount,
+        },
+        });
+
+        return updatedPledge;
     });
 
     return {
-      ...updatedPledge,
-      amount: this.formatAmount(updatedPledge.amount),
-      redeemedAmount: updatedPledge.redeemedAmount ? this.formatAmount(updatedPledge.redeemedAmount!) : null,
+        ...result,
+        amount: this.formatAmount(result.amount),
+        redeemedAmount: result.redeemedAmount
+        ? this.formatAmount(result.redeemedAmount)
+        : null,
     };
-  }
+    }
 }

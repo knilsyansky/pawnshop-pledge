@@ -5,19 +5,22 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc -p tsconfig.app.json",
+
     "start": "node dist/main.js",
 
+    "start:dev": "nest start --watch",
+
     "test:e2e": "jest --config jest-e2e.json",
+
     "verify:db": "node verify-db-connection.js",
+
     "prisma:generate": "prisma generate",
-
-    "prisma:test:create": "ts-node --transpile-only prisma/create-test-db.ts",
-
-    "prisma:test:migrate": "ts-node --transpile-only prisma/migrate-test.ts",
 
     "prisma:migrate": "prisma migrate deploy",
 
     "prisma:seed": "ts-node --transpile-only prisma/seed.ts",
+
+    "prisma:test:create": "ts-node --transpile-only prisma/create-test-db.ts",
 
     "prisma:migrate:test": "cross-env NODE_ENV=test prisma migrate deploy"
   },

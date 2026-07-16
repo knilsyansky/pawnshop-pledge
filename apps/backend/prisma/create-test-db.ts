@@ -19,10 +19,16 @@ async function main() {
 
   try {
     await client.connect();
+
+    // SQL Injection protection
+    if (!/^[a-zA-Z0-9_-]+$/.test(dbName)) { 
+        throw new Error('Invalid database name');
+    }
+
     await client.query(`CREATE DATABASE "${dbName}"`);
     console.log(`Created test database ${dbName}`);
-  } catch (error: any) {
-    if (error.code === '42P04') {
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === '42P04') {
       console.log(`Test database ${dbName} already exists`);
     } else {
       throw error;
@@ -34,5 +40,5 @@ async function main() {
 
 main().catch((error) => {
   console.error(error);
-  process.exit(1);
+  process.exitCode = 1;
 });

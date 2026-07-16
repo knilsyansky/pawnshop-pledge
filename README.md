@@ -1,69 +1,136 @@
 # Pawnshop Pledge
 
-## Repository scaffold
+Монорепозиторий приложения для управления залогами.
 
-This repository is a monorepo scaffold for a pawnshop pledge/redeem application.
+Структура:
+.
+├── apps
+│ ├── backend
+│ └── frontend
+├── docker
+│ └── docker-compose.yml
+└── README.md
 
-## Structure
+---
 
-- `apps/backend` - backend application workspace
-- `apps/frontend` - frontend application workspace
-- `docker/docker-compose.yml` - PostgreSQL service definition
-- `.env.example` - environment variable example
+# Требования
 
-## Setup
+Перед запуском необходимо установить:
 
-1. Install dependencies
+- Node.js 20+
+- npm 10+
+- Docker Desktop
 
-   ```bash
-   npm run bootstrap
-   ```
+Проверка:
 
-2. Start PostgreSQL
+```bash
+node -v
+npm -v
+docker -v
+```
 
-   ```bash
-   npm run db:up
-   ```
+---  
 
-3. Stop PostgreSQL
+# Первый запуск проекта
 
-   ```bash
-   npm run db:down
-   ```
+Скопировать репозиторий:
 
-4. Check Docker status
+```bash
+git clone https://github.com/knilsyansky/pawnshop-pledge.git
+cd pawnshop-pledge
+```
 
-   ```bash
-   npm run db:ps
-   ```
+Установка зависимостей:
 
-5. Verify backend can connect to PostgreSQL
+```bash
+npm run install:all
+```
+Команда устанавливает зависимости:
 
-   ```bash
-   npm run env:copy
-   npm run db:verify
-   ```
+root dependencies
+backend dependencies
+frontend dependencies
 
-6. Apply database migrations
+Настройка переменных окружения:
 
-   ```bash
-   npm run db:migrate
-   ```
+```bash
+npm run env:copy
+```
+Backend использует:
 
-7. Seed the database with initial tariffs and categories
+```bash
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/pawnshop
+```
 
-   ```bash
-   npm run db:seed
-   ```
+--- 
 
-8. Tail PostgreSQL logs
+№ Запуск проекта
 
-   ```bash
-   npm run db:logs
-   ```
+Полная автоматическая настройка:
 
-## Notes
+```bash
+npm run dev:setup
+```
 
-- No business logic or application startup is configured yet.
-- Backend and frontend packages are initialized as workspaces and can be extended in later stages.
-- Use `.env.example` as a reference when adding environment configuration.
+Команда выполняет:
+
+1 Запуск PostgreSQL в Docker
+2 Проверку подключения к БД
+3 Применение Prisma migrations
+4 Заполнение базы начальными данными
+5 Сборку backend
+6 Сборку frontend
+7 Запуск backend и frontend в dev режиме
+
+---
+
+# E2E тесты
+
+Создание тестовой базы:
+
+```bash
+npm run db:create:test
+```
+
+Применение тестовых миграций:
+
+```bash
+npm run db:migrate:test
+```
+
+Запуск:
+
+```bash
+npm run test:e2e
+```
+
+# Архитектура
+
+## Backend:
+
+NestJS
+Prisma ORM
+PostgreSQL
+упрощенный DDD подход
+
+Основные слои:
+
+domain
+ ├── value-objects
+ └── domain-services
+
+application
+ └── use-cases
+
+presentation
+ └── controllers
+
+## Frontend:
+
+React
+Material UI
+
+
+# Детали реализации
+
+Параметр overduePeriodDays в настоящее время сохраняется, но не используется, так как расчет просрочки выполняется ежедневно и не имеет ограничений по сроку.
