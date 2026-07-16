@@ -5,27 +5,16 @@
   "author": {
     "name": ""
   },
-  "workspaces": [
-    "apps/*"
-  ],
   "scripts": {
-    "bootstrap": "npm install",
+    "bootstrap": "npm install --prefix apps/backend && npm install --prefix apps/frontend",
     "db:up": "docker compose -f docker/docker-compose.yml up -d",
     "db:down": "docker compose -f docker/docker-compose.yml down",
     "db:ps": "docker compose -f docker/docker-compose.yml ps",
     "db:logs": "docker compose -f docker/docker-compose.yml logs --follow",
-    "db:verify": "node apps/backend/verify-db-connection.js",
+    "db:verify": "npm --prefix apps/backend run verify:db",
     "db:migrate": "npm run --prefix apps/backend prisma:migrate",
     "db:seed": "npm run --prefix apps/backend prisma:seed",
     "env:copy": "node -e \"require('fs').copyFileSync('.env.example', '.env')\"",
     "start": "echo \"No application start configured yet. Run npm run db:up to start PostgreSQL.\""
-  },
-  "devDependencies": {
-    "@types/node": "^26.1.1",
-    "dotenv": "^16.3.1",
-    "pg": "^8.11.2"
-  },
-  "dependencies": {
-    "@prisma/client": "^5.22.0"
   }
 }

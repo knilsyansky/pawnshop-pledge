@@ -42,6 +42,7 @@ Testing
 - Jest
 - Supertest
 - e2e tests
+- Stage 8 includes e2e coverage for pledge creation logic, verifying amount calculation and due date generation
 
 ---
 
