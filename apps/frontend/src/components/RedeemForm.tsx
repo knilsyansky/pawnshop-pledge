@@ -149,6 +149,7 @@ export function RedeemForm() {
                 <Typography>Дата до: {new Date(selectedPledge.dueDate).toLocaleDateString()}</Typography>
                 <Typography>Процент за основной период: {selectedPledge.tariff.basePeriodRate}%</Typography>
                 <Typography>Процент за просрочку в день: {selectedPledge.tariff.overdueRate}%</Typography>
+                <Typography>За этот залог к возврату полагается {selectedPledge.redemptionAmount}</Typography>
                 <Button
                   variant="contained"
                   onClick={handleRedeem}

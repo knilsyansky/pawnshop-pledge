@@ -16,15 +16,36 @@ export class PledgeService {
     return Money.from(decimalAmount.toString()).toString();
   }
 
-  async findAll() {
-    return this.prisma.pledge.findMany({
-      include: {
+  // плохая реализация логики, должна быть в Entity
+    async findAll() {
+    const pledges = await this.prisma.pledge.findMany({
+        include: {
         client: true,
         tariff: true,
-        items: true
-      }
+        items: true,
+        },
     });
-  }
+
+    return pledges.map((pledge) => ({
+        ...pledge,
+
+        amount: this.formatAmount(pledge.amount),
+
+        redemptionAmount:
+        pledge.status === 'ACTIVE'
+            ? this.formatAmount(
+                RedemptionCalculator.calculate(
+                pledge.amount,
+                pledge.dueDate,
+                pledge.tariff.basePeriodRate,
+                pledge.tariff.overdueRate,
+                ),
+            )
+            : pledge.redeemedAmount
+            ? this.formatAmount(pledge.redeemedAmount)
+            : null,
+    }));
+    }
 
   async create(createPledgeDto: CreatePledgeDto) {
     const tariff = await this.prisma.tariff.findUnique({

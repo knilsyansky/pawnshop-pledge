@@ -48,6 +48,7 @@ export interface PledgeRecord {
     createdAt: string;
     dueDate: string;
     amount: string;
+    redemptionAmount: string | null;
 }
 
 export interface PledgeItemRecord {
@@ -103,7 +104,7 @@ export async function createPledge(payload: CreatePledgePayload) {
 }
 
 export async function redeemPledge(pledgeId: number) {
-  const response = await fetch(`${API_BASE_URL}/redeem/${pledgeId}`, {
+  const response = await fetch(`${API_BASE_URL}/pledges/redeem/${pledgeId}`, {
     method: 'PATCH'
   });
 

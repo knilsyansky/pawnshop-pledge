@@ -16,23 +16,23 @@ const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) })
 async function seedDemoData() {
     const tariff = await prisma.tariff.findUnique({
         where: {
-            id: 'TECH_5_DAYS',
+            id: 'Техника 5 дней 2.158%',
         },
     });
 
     if (!tariff) {
-        throw new Error('TECH_5_DAYS tariff not found. Run tariff seed first.');
+        throw new Error('Техника 5 дней 2.158% tariff not found. Run tariff seed first.');
     }
 
     const smartphoneCategory = await prisma.itemCategory.findUnique({
         where: {
-            id: 'SMARTPHONE',
+            id: 'Смартфоны',
         },
     });
 
     const monitorCategory = await prisma.itemCategory.findUnique({
         where: {
-            id: 'MONITOR',
+            id: 'Мониторы',
         },
     });
 
