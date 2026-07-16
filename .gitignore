@@ -5,6 +5,10 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+**/.env
 
 # Backend build output
 /apps/backend/dist/
+/apps/frontend/dist/
+**/dist/
+dist/
